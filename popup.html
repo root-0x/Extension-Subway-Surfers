@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=680, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>V12 · SubwaySurfers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-sidebar: #0a0a0a;
+            --bg-card: #0f0f0f;
+            --bg-input: #141414;
+            --bg-hover: #1a1a1a;
+            
+            --accent: #dc2626;
+            --accent-glow: rgba(220, 38, 38, 0.4);
+            --accent-hover: #b91c1c;
+            --accent-soft: rgba(220, 38, 38, 0.15);
+            --accent-dark: #991b1b;
+            
+            --text-main: #fafafa;
+            --text-muted: #a3a3a3;
+            
+            --border: #1f1f1f;
+            --border-highlight: #2a2a2a;
+            
+            --success: #b91c1c;
+            --danger: #dc2626;
+            
+            --radius: 18px;
+            --radius-sm: 12px;
+            --radius-lg: 22px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        *:focus { outline: none; }
+        *:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+        html {
+            width: 680px;
+            height: 600px;
+            min-width: 680px;
+            min-height: 600px;
+            overflow: hidden;
+        }
+
+        @keyframes bgShift {
+            0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+            33% { opacity: 0.92; transform: scale(1.04) rotate(0.8deg); }
+            66% { opacity: 0.96; transform: scale(1.02) rotate(-0.5deg); }
+        }
+        @keyframes orbFloat1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(25px, -15px) scale(1.08); }
+            66% { transform: translate(-15px, 10px) scale(0.98); }
+        }
+        @keyframes orbFloat2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-20px, -25px) scale(1.1); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.35; box-shadow: 0 0 20px var(--accent-glow); }
+            50% { opacity: 0.6; box-shadow: 0 0 28px var(--accent-glow); }
+        }
+        @keyframes cardSlideIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes backdropIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes brandPulse {
+            0%, 100% { filter: drop-shadow(0 0 8px var(--accent-glow)); opacity: 1; }
+            50% { filter: drop-shadow(0 0 14px var(--accent-glow)); opacity: 0.95; }
+        }
+        @keyframes sectionFade {
+            from { opacity: 0; transform: translateX(8px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes gradientMove {
+            0%, 100% { background-position: 0% 50%, 100% 50%, 50% 0%; opacity: 1; }
+            25% { background-position: 100% 30%, 0% 70%, 80% 100%; opacity: 0.95; }
+            50% { background-position: 50% 100%, 100% 0%, 20% 50%; opacity: 1; }
+            75% { background-position: 0% 20%, 50% 80%, 60% 20%; opacity: 0.92; }
+        }
+        @keyframes gradientPulse {
+            0%, 100% { opacity: 0.85; }
+            50% { opacity: 1; }
+        }
+        @keyframes orbMove1 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            25% { transform: translate(55px, -40px) scale(1.25); opacity: 0.75; }
+            50% { transform: translate(-25px, 28px) scale(0.92); opacity: 0.45; }
+            75% { transform: translate(45px, 50px) scale(1.15); opacity: 0.65; }
+        }
+        @keyframes orbMove2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-55px, -45px) scale(1.2); }
+            66% { transform: translate(35px, 30px) scale(0.95); }
+        }
+        @keyframes orbMove3 {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(50px, -30px) rotate(90deg); }
+            100% { transform: translate(60px, 50px) rotate(180deg); }
+        }
+        @keyframes orbMove4 {
+            0%, 100% { transform: translate(-30px, 0) scale(1); }
+            50% { transform: translate(50px, -55px) scale(1.3); }
+        }
+        @keyframes orbMove5 {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+            50% { transform: translate(-40px, 35px) scale(1.15); opacity: 0.65; }
+        }
+        @keyframes linesMove {
+            0% { transform: translateX(0) skewX(-5deg); }
+            100% { transform: translateX(-80px) skewX(-5deg); }
+        }
+        @keyframes linesMoveAlt {
+            0% { transform: translateX(-40px) skewX(3deg); }
+            100% { transform: translateX(40px) skewX(3deg); }
+        }
+        @keyframes shineSweep {
+            0% { transform: translateX(-100%) skewX(-12deg); opacity: 0; }
+            10% { opacity: 0.1; }
+            50% { transform: translateX(100%) skewX(-12deg); opacity: 0.08; }
+            90% { opacity: 0.04; }
+            100% { transform: translateX(300%) skewX(-12deg); opacity: 0; }
+        }
+        @keyframes gridScroll {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+        @keyframes gridScrollAlt {
+            0% { transform: translate(30px, 30px); }
+            100% { transform: translate(0, 0); }
+        }
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.12; }
+            50% { opacity: 0.22; }
+        }
+        @keyframes floatDot {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.15; }
+            25% { transform: translate(15px, -20px) scale(1.2); opacity: 0.25; }
+            50% { transform: translate(-10px, 10px) scale(0.9); opacity: 0.18; }
+            75% { transform: translate(-20px, -15px) scale(1.1); opacity: 0.22; }
+        }
+
+        body {
+            width: 680px;
+            height: 600px;
+            min-width: 680px;
+            min-height: 600px;
+            max-width: 100%;
+            max-height: 100%;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            border-radius: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .app-wrap {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        .app-footer {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 6px 16px 10px;
+            font-size: 10px;
+            color: var(--text-muted);
+            opacity: 0.6;
+        }
+
+        .bg-animated {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+            border-radius: inherit;
+        }
+        .bg-layer {
+            position: absolute;
+            inset: 0;
+        }
+        .bg-gradient-move {
+            background: 
+                radial-gradient(ellipse 90% 60% at 20% 30%, rgba(220, 38, 38, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse 70% 90% at 85% 70%, rgba(185, 28, 28, 0.16) 0%, transparent 45%),
+                radial-gradient(ellipse 60% 60% at 50% 90%, rgba(127, 29, 29, 0.12) 0%, transparent 55%);
+            background-size: 200% 200%, 180% 180%, 220% 220%;
+            animation: gradientMove 11s ease-in-out infinite, gradientPulse 6s ease-in-out infinite;
+        }
+        .bg-glow-pulse {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 80% at 50% 50%, rgba(220, 38, 38, 0.08) 0%, transparent 60%);
+            animation: glowPulse 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .bg-orb {
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+        .bg-orb-1 {
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.22) 0%, transparent 70%);
+            top: -80px; right: -60px;
+            animation: orbMove1 10s ease-in-out infinite;
+        }
+        .bg-orb-2 {
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(185, 28, 28, 0.18) 0%, transparent 70%);
+            bottom: -40px; left: -50px;
+            animation: orbMove2 12s ease-in-out infinite;
+        }
+        .bg-orb-3 {
+            width: 180px; height: 180px;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.14) 0%, transparent 65%);
+            top: 40%; left: 10%;
+            animation: orbMove3 18s linear infinite;
+        }
+        .bg-orb-4 {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(127, 29, 29, 0.2) 0%, transparent 70%);
+            bottom: 20%; right: 15%;
+            animation: orbMove4 9s ease-in-out infinite;
+        }
+        .bg-orb-5 {
+            width: 140px; height: 140px;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.15) 0%, transparent 70%);
+            top: 60%; right: 25%;
+            filter: blur(35px);
+            animation: orbMove5 13s ease-in-out infinite;
+        }
+        .bg-lines {
+            background: repeating-linear-gradient(
+                105deg,
+                transparent,
+                transparent 60px,
+                rgba(220, 38, 38, 0.04) 60px,
+                rgba(220, 38, 38, 0.08) 62px
+            );
+            background-size: 200% 100%;
+            animation: linesMove 18s linear infinite;
+        }
+        .bg-lines-alt {
+            background: repeating-linear-gradient(
+                75deg,
+                transparent,
+                transparent 50px,
+                rgba(220, 38, 38, 0.02) 50px,
+                rgba(220, 38, 38, 0.05) 52px
+            );
+            background-size: 150% 100%;
+            animation: linesMoveAlt 14s ease-in-out infinite alternate;
+        }
+        .bg-grid {
+            background-image: 
+                linear-gradient(rgba(220, 38, 38, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(220, 38, 38, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridScroll 14s linear infinite;
+        }
+        .bg-grid-alt {
+            background-image: 
+                linear-gradient(rgba(220, 38, 38, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(220, 38, 38, 0.02) 1px, transparent 1px);
+            background-size: 28px 28px;
+            animation: gridScrollAlt 14s linear infinite;
+        }
+        .bg-shine {
+            width: 50%;
+            height: 120%;
+            top: -10%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
+            animation: shineSweep 5s ease-in-out infinite;
+        }
+        .bg-scanline {
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.03) 2px,
+                rgba(0,0,0,0.03) 4px
+            );
+            pointer-events: none;
+            z-index: 0;
+            animation: scanline 8s linear infinite;
+        }
+        .bg-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(220, 38, 38, 0.2);
+            filter: blur(1px);
+            animation: floatDot 8s ease-in-out infinite;
+        }
+        .bg-dot:nth-child(1) { left: 15%; top: 20%; animation-delay: 0s; }
+        .bg-dot:nth-child(2) { left: 80%; top: 15%; animation-delay: -2s; }
+        .bg-dot:nth-child(3) { left: 45%; top: 70%; animation-delay: -4s; }
+        .bg-dot:nth-child(4) { left: 70%; top: 55%; animation-delay: -1s; }
+        .bg-dot:nth-child(5) { left: 25%; top: 50%; animation-delay: -3s; }
+        .bg-dot:nth-child(6) { left: 90%; top: 80%; animation-delay: -5s; }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 70% 20%, rgba(220, 38, 38, 0.1) 0%, transparent 45%);
+            animation: bgShift 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 16px;
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.95) 0%, rgba(5, 5, 5, 0.9) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.25);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(220, 38, 38, 0.06);
+            flex-shrink: 0;
+            min-height: 50px;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .brand-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 14px;
+            box-shadow: 0 0 20px var(--accent-glow);
+            animation: brandPulse 3s ease-in-out infinite;
+        }
+        .brand-text {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 0.3px;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+        .nav-tabs {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 6px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            flex: 1 1 0;
+            min-width: 0;
+            justify-content: center;
+        }
+        .nav-item {
+            flex: 0 0 auto;
+            padding: 6px 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            font-family: 'Orbitron', sans-serif;
+            transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border-radius: 6px;
+            border: none;
+            position: relative;
+            white-space: nowrap;
+        }
+        .nav-item i { font-size: 11px; opacity: 0.9; }
+        .nav-item:hover { color: var(--text-main); background: rgba(220, 38, 38, 0.12); transform: translateY(-1px); }
+        .nav-item.active {
+            color: #fff;
+            background: var(--accent);
+            box-shadow: 0 0 16px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .nav-item.active i { color: #fff; }
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-ghost:hover { color: var(--text-main); border-color: rgba(220, 38, 38, 0.4); background: var(--accent-soft); }
+
+        .main {
+            flex: 1 1 0;
+            min-height: 0;
+            padding: 16px 20px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            z-index: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .view-section { display: none; min-width: 0; }
+        .view-section.active { 
+            display: block; 
+            animation: sectionFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-header { margin-bottom: 22px; animation: sectionFade 0.3s cubic-bezier(0.16, 1, 0.3, 1) backwards; }
+        .section-title { font-family: 'Orbitron', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: 1px; color: var(--text-main); text-transform: uppercase; }
+        .section-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 6px;         }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; min-width: 0; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; min-width: 0; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; min-width: 0;         }
+
+        .card {
+            background: rgba(15, 15, 15, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(220, 38, 38, 0.15);
+            border-left: 3px solid var(--accent);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+            animation: cardSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            min-width: 0;
+        }
+        .view-section .card:nth-child(2) { animation-delay: 0.05s; }
+        .view-section .card:nth-child(3) { animation-delay: 0.1s; }
+        .view-section .card:nth-child(4) { animation-delay: 0.15s; }
+        .view-section .card:nth-child(5) { animation-delay: 0.2s; }
+        .view-section .card:nth-child(6) { animation-delay: 0.25s; }
+        .view-section .card:nth-child(7) { animation-delay: 0.3s; }
+        .view-section .card:nth-child(8) { animation-delay: 0.35s; }
+        .view-section .card:nth-child(9) { animation-delay: 0.4s; }
+        .card:hover { 
+            border-left-color: var(--accent);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 28px rgba(220, 38, 38, 0.12), inset 0 0 0 1px rgba(220, 38, 38, 0.06); 
+            transform: translateY(-2px);
+            background: rgba(20, 20, 20, 0.82);
+        }
+
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 16px; 
+        }
+        .card-title { 
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px; font-weight: 700; color: var(--accent); 
+            text-transform: uppercase; letter-spacing: 1.2px; 
+        }
+
+        .control-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .control-row:last-child { border-bottom: none; }
+        
+        .control-label { font-size: 14px; font-weight: 500; color: var(--text-main); }
+        .control-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px;         }
+
+        .switch { position: relative; display: inline-block; width: 42px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--bg-input); transition: all 0.3s ease; border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: var(--text-muted); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent); box-shadow: 0 0 16px var(--accent-glow); }
+        input:checked + .slider:before { transform: translateX(20px); background-color: white;         }
+
+        .btn {
+            padding: 10px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+            background: var(--bg-input); color: var(--text-main); font-size: 13px; font-weight: 600;
+            cursor: pointer; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); text-align: center; width: 100%;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn:hover { background: var(--border-highlight); transform: translateY(-2px); }
+        .btn:active { transform: translateY(0) scale(0.97); }
+        
+        .btn-primary { 
+            background: var(--accent); border-color: var(--accent); color: white; 
+            box-shadow: 0 4px 16px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+            border-radius: var(--radius-sm);
+        }
+        .btn-primary:hover { 
+            background: var(--accent-hover); border-color: var(--accent-hover); 
+            box-shadow: 0 6px 24px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+            transform: translateY(-2px);
+        }
+        .btn-primary:active { transform: translateY(0) scale(0.98); box-shadow: 0 2px 12px var(--accent-glow); }
+        
+        .btn-danger { 
+            background: rgba(220, 38, 38, 0.12); border-color: rgba(220, 38, 38, 0.4); color: #f87171; 
+        }
+        .btn-danger:hover { background: rgba(220, 38, 38, 0.2); border-color: var(--accent); }
+        .btn-danger:active { transform: translateY(0) scale(0.98); }
+        
+        .btn-mini { padding: 8px 12px; font-size: 12px;         }
+
+        input[type="text"], input[type="number"], select {
+            background: var(--bg-input); border: 1px solid transparent;
+            color: var(--text-main); padding: 10px 12px; border-radius: var(--radius-sm); 
+            width: 100%; font-size: 13px; font-family: inherit; transition: all 0.2s;
+        }
+        input[type="text"]:focus, select:focus { 
+            border-color: var(--accent); background: var(--bg-card); 
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        input[type="range"] { accent-color: var(--accent); }
+        input[type="range"]::-webkit-slider-runnable-track { background: var(--bg-input); border-radius: 10px; height: 6px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent-glow); cursor: pointer; transition: transform 0.15s; }
+        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15);         }
+
+        input[type="color"] {
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            background: transparent !important;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 6px;
+        }
+        input[type="color"]::-moz-color-swatch {
+            border: none;
+            border-radius: 6px;
+        }
+        input[type="color"]:focus { border: none !important; box-shadow: none !important; outline: none !important; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; transition: background 0.2s; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-dark); }
+        ::-webkit-scrollbar-thumb:active { background: var(--accent); }
+
+        ::selection {
+            background: rgba(220, 38, 38, 0.35);
+            color: var(--text-main);
+        }
+
+        .scroll-list {
+            max-height: 180px; overflow-y: auto; overflow-x: hidden; padding-right: 6px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+            min-width: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .leaderboard-nocoin { margin-top: 4px; }
+        .leaderboard-nocoin-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 2px;
+        }
+        .leaderboard-nocoin-subtitle {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .leaderboard-nocoin-wrap {
+            max-height: 240px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-right: 4px;
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .leaderboard-nocoin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .leaderboard-nocoin-table th {
+            background: rgba(255,255,255,0.08);
+            color: var(--text-main);
+            padding: 8px 10px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .leaderboard-nocoin-table th.col-time { text-align: right; }
+        .leaderboard-nocoin-table td {
+            padding: 6px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            color: var(--text-main);
+        }
+        .leaderboard-nocoin-table tr.row-first td {
+            background: rgba(255,255,255,0.06);
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .leaderboard-nocoin-table .col-rank {
+            width: 36px;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+        }
+        .leaderboard-nocoin-table .col-time {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+            color: var(--accent);
+        }
+        .leaderboard-nocoin-table tr.row-first .col-time { color: var(--accent); }
+
+        .hotkey-container {
+            background: var(--bg-body); padding: 4px; border-radius: var(--radius-sm);
+            border: 1px solid var(--border); display: flex; gap: 4px;
+        }
+        .key-btn {
+            flex: 1; border: none; background: transparent; color: var(--text-muted);
+            padding: 8px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 11px;
+            text-transform: uppercase; transition: all 0.2s;
+        }
+        .key-btn:hover { color: var(--text-main); background: rgba(220, 38, 38, 0.08); }
+        .key-btn.active { background: var(--bg-card); color: var(--accent); box-shadow: 0 2px 10px var(--accent-glow); transition: all 0.2s ease;         }
+
+        .status-toast {
+            position: fixed; bottom: 24px; right: 24px;
+            background: rgba(15, 15, 15, 0.95);
+            backdrop-filter: blur(12px);
+            color: var(--text-main);
+            padding: 12px 18px; border-radius: 12px;
+            font-size: 13px; font-weight: 500; 
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5), 0 0 20px rgba(220, 38, 38, 0.1);
+            transform: translateY(100px); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 999; display: flex; align-items: center; gap: 12px;
+        }
+        .status-toast.show { transform: translateY(0); animation: modalIn 0.25s ease; }
+        .status-toast .toast-icon { font-size: 16px; flex-shrink: 0; }
+        .status-toast .toast-icon.success { color: #4ade80; }
+        .status-toast .toast-icon.error { color: #f87171; }
+
+        .game-tab-banner {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 16px;
+            background: linear-gradient(90deg, rgba(220, 38, 38, 0.15) 0%, rgba(220, 38, 38, 0.06) 100%);
+            border-bottom: 1px solid rgba(220, 38, 38, 0.3);
+            font-size: 12px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+        }
+        .game-tab-banner.show { display: flex; }
+        .game-tab-banner .banner-text { flex: 1; }
+        .game-tab-banner .banner-link {
+            padding: 6px 12px;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 11px;
+            white-space: nowrap;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .game-tab-banner .banner-link:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+        [data-tooltip] {
+            position: relative;
+        }
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%) translateY(6px);
+            bottom: 100%;
+            padding: 8px 12px;
+            max-width: 260px;
+            background: rgba(15, 15, 15, 0.98);
+            color: var(--text-main);
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.35;
+            border-radius: 8px;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            white-space: normal;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s, transform 0.2s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        [data-tooltip]:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        .language-title { font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+        .language-subtitle { font-size: 13px; color: var(--text-muted); }
+        .language-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .language-option {
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-main);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .language-option:hover { border-color: rgba(220, 38, 38, 0.4); background: var(--accent-soft); transition: all 0.2s; }
+        .language-option.active { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        .language-badge { font-size: 12px; color: var(--text-muted); }
+
+        .style-slider { width: 100%; margin: 8px 0; }
+        .style-label { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; }
+        .upload-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+        .upload-btn { flex: 1; font-size: 11px; padding: 6px; }
+        .preview-box { width: 24px; height: 24px; border-radius: 8px; border: 1px solid var(--border); background-size: cover; background-position: center; }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animated" aria-hidden="true">
+        <div class="bg-layer bg-gradient-move"></div>
+        <div class="bg-layer bg-glow-pulse"></div>
+        <div class="bg-layer bg-orb bg-orb-1"></div>
+        <div class="bg-layer bg-orb bg-orb-2"></div>
+        <div class="bg-layer bg-orb bg-orb-3"></div>
+        <div class="bg-layer bg-orb bg-orb-4"></div>
+        <div class="bg-layer bg-orb bg-orb-5"></div>
+        <div class="bg-layer bg-lines"></div>
+        <div class="bg-layer bg-lines-alt"></div>
+        <div class="bg-layer bg-grid"></div>
+        <div class="bg-layer bg-grid-alt"></div>
+        <div class="bg-layer bg-shine"></div>
+        <span class="bg-dot"></span>
+        <span class="bg-dot"></span>
+        <span class="bg-dot"></span>
+        <span class="bg-dot"></span>
+        <span class="bg-dot"></span>
+        <span class="bg-dot"></span>
+        <div class="bg-scanline" aria-hidden="true"></div>
+    </div>
+
+    <div class="app-wrap">
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-icon"><i class="fa-solid fa-train-subway"></i></span>
+                <span class="brand-text">V12 · SubwaySurfers</span>
+            </div>
+            <nav class="nav-tabs">
+                <div class="nav-item active" data-target="dashboard"><i class="fa-solid fa-gauge-high"></i><span data-i18n-key="nav.dashboard">Dashboard</span></div>
+                <div class="nav-item" data-target="gametools"><i class="fa-solid fa-gamepad"></i><span data-i18n-key="nav.gametools">Game</span></div>
+                <div class="nav-item" data-target="appearance"><i class="fa-solid fa-paintbrush"></i><span>Style</span></div>
+                <div class="nav-item" data-target="advanced"><i class="fa-solid fa-sliders"></i><span data-i18n-key="nav.custom">Custom</span></div>
+                <div class="nav-item" data-target="dev"><i class="fa-solid fa-code"></i><span>Dev</span></div>
+            </nav>
+        </header>
+
+        <div id="gameTabBanner" class="game-tab-banner" role="alert">
+            <span class="banner-text"><i class="fa-solid fa-circle-info" style="margin-right:8px; color: var(--accent);"></i><span id="gameTabBannerText">Ouvre Subway Surfers sur yell0wsuit.page pour que les overlays et le timer fonctionnent.</span></span>
+            <a href="https://yell0wsuit.page/assets/games/subway-surfers-unity/index.html" target="_blank" rel="noopener" class="banner-link" id="gameTabBannerLink"><i class="fa-solid fa-external-link-alt" style="margin-right:6px;"></i>Ouvrir le jeu</a>
+        </div>
+
+        <div class="main">
+        
+        <div id="dashboard" class="view-section active">
+            <div class="section-header">
+                <div class="section-title" data-i18n-key="section.dashboard.title">Dashboard</div>
+                <div class="section-subtitle" data-i18n-key="section.dashboard.subtitle">Contrôles principaux & Overlays</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title" data-i18n-key="card.liveOverlays">Live Overlays</span></div>
+                
+                <div class="control-row" data-i18n-tooltip="tooltip.speedrun">
+                    <div>
+                        <div class="control-label" data-i18n-key="label.speedrun">Speedrun Timer</div>
+                        <div class="control-desc" data-i18n-key="desc.speedrun">Chrono précis au millième</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" id="toggleTimerSwitch"><span class="slider"></span></label>
+                </div>
+
+                <div style="margin: 10px 0 20px 0;" data-i18n-tooltip="tooltip.timerHotkey">
+                    <div class="control-desc" style="margin-bottom: 8px;" data-i18n-key="desc.timerHotkey">Touche d'activation du Timer :</div>
+                    <div class="hotkey-container">
+                        <button class="key-btn hotkey-btn active" data-key="Control">CTRL</button>
+                        <button class="key-btn hotkey-btn" data-key="Shift">SHIFT</button>
+                        <button class="key-btn hotkey-btn" data-key="Alt">ALT</button>
+                        <button class="key-btn hotkey-btn" data-key="Space">SPACE</button>
+                    </div>
+                    <input type="text" id="customKeyInput" placeholder="Ou tapez une touche personnalisée..." data-i18n-placeholder="placeholder.customKey" style="margin-top: 8px; border: 1px solid var(--border);">
+                </div>
+
+                <div class="control-row" data-i18n-tooltip="tooltip.fps">
+                    <div>
+                        <div class="control-label" data-i18n-key="label.fps">FPS Counter</div>
+                        <div class="control-desc" data-i18n-key="desc.fps">Affiche les images/seconde</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" id="toggleFpsSwitch"><span class="slider"></span></label>
+                </div>
+                <div class="control-row" data-i18n-tooltip="tooltip.keypress">
+                    <div>
+                        <div class="control-label" data-i18n-key="label.keypress">Affichage Touches</div>
+                        <div class="control-desc" data-i18n-key="desc.keypress">Visualisez vos inputs en direct</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" id="toggleKeypressSwitch"><span class="slider"></span></label>
+                </div>
+            </div>
+
+            <div class="card" data-i18n-tooltip="tooltip.resolution">
+                <div class="card-header"><span class="card-title" data-i18n-key="card.resolution">Résolution</span></div>
+                <div class="grid-2">
+                    <select id="resolutionSelect">
+                        <option value="608x1080">608x1080 (Vertical)</option>
+                        <option value="890x1080">890x1080 (Large)</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                    <button class="btn btn-primary" id="activateResolution">Forcer</button>
+                </div>
+                
+                <div id="customResInputs" style="display:none; margin-top:12px;" data-i18n-tooltip="tooltip.customResolution">
+                    <div class="grid-2" style="gap:8px;">
+                        <input type="number" id="customWidth" placeholder="Largeur (px)" min="320" max="3840">
+                        <input type="number" id="customHeight" placeholder="Hauteur (px)" min="240" max="2160">
+                    </div>
+                </div>
+
+                <div style="margin-top: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 8px;" data-i18n-tooltip="tooltip.blackBars">
+                        <input type="checkbox" id="blackBarsToggle" checked style="width: auto;">
+                        <span style="font-size: 13px; color: var(--text-muted);">Bandes noires</span>
+                    </div>
+                    <input type="color" id="barsColorPicker" value="#000000" style="width:50px;height:30px;cursor:pointer;">
+                    <button class="btn btn-mini" id="deactivateResolution" style="width: auto;">Réinitialiser</button>
+                </div>
+            </div>
+
+            <div class="card leaderboard-nocoin">
+                <div class="card-header">
+                    <span class="card-title"><i class="fa-solid fa-trophy" style="margin-right:6px;"></i><span data-i18n-key="card.leaderboardNoCoin">Classement No Coins</span></span>
+                </div>
+                <div class="leaderboard-nocoin-title" data-i18n-key="leaderboard.frenchTitle">French Leaderboard</div>
+                <div class="leaderboard-nocoin-subtitle" data-i18n-key="leaderboard.noCoinSubway">No Coins · Subway Surfers</div>
+                <div class="leaderboard-nocoin-wrap">
+                    <table class="leaderboard-nocoin-table">
+                        <thead>
+                            <tr>
+                                <th class="col-rank">#</th>
+                                <th data-i18n-key="leaderboard.speedrunner">Speedrunner</th>
+                                <th class="col-time" data-i18n-key="leaderboard.stopwatch">Stopwatch</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="row-first"><td class="col-rank">1</td><td>LIGHT.</td><td class="col-time">1:20:59.730</td></tr>
+                            <tr><td class="col-rank">2</td><td>FLOIXXY</td><td class="col-time">1:16:00.600</td></tr>
+                            <tr><td class="col-rank">3</td><td>PIROXX</td><td class="col-time">1:15:21.260</td></tr>
+                            <tr><td class="col-rank">4</td><td>WASMO</td><td class="col-time">1:12:59.730</td></tr>
+                            <tr><td class="col-rank">5</td><td>BLKZZ</td><td class="col-time">1:11:57.050</td></tr>
+                            <tr><td class="col-rank">6</td><td>KIMATO</td><td class="col-time">1:09:25.732</td></tr>
+                            <tr><td class="col-rank">7</td><td>SNIPER</td><td class="col-time">1:07:57.232</td></tr>
+                            <tr><td class="col-rank">8</td><td>PIWI</td><td class="col-time">1:00:28.070</td></tr>
+                            <tr><td class="col-rank">9</td><td>MK&TZ</td><td class="col-time">57:11.062</td></tr>
+                            <tr><td class="col-rank">10</td><td>ZKEEF</td><td class="col-time">53:49.830</td></tr>
+                            <tr><td class="col-rank">11</td><td>ASTAZIA</td><td class="col-time">50:40.767</td></tr>
+                            <tr><td class="col-rank">12</td><td>BELZ</td><td class="col-time">50:14.850</td></tr>
+                            <tr><td class="col-rank">13</td><td>AQUABLE</td><td class="col-time">50:06.478</td></tr>
+                            <tr><td class="col-rank">14</td><td>ANATOLE</td><td class="col-time">46:08.200</td></tr>
+                            <tr><td class="col-rank">15</td><td>FLOQERRR</td><td class="col-time">45:30.089</td></tr>
+                            <tr><td class="col-rank">16</td><td>ZX</td><td class="col-time">44:38.478</td></tr>
+                            <tr><td class="col-rank">17</td><td>LIZOX</td><td class="col-time">42:48.365</td></tr>
+                            <tr><td class="col-rank">18</td><td>HORROR</td><td class="col-time">41:12.900</td></tr>
+                            <tr><td class="col-rank">19</td><td>TINSO</td><td class="col-time">38:55.467</td></tr>
+                            <tr><td class="col-rank">20</td><td>WXSEM</td><td class="col-time">35:30.440</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="gametools" class="view-section">
+            <div class="section-header">
+                <div class="section-title" data-i18n-key="section.gametools.title">Outils Jeu</div>
+                <div class="section-subtitle" data-i18n-key="section.gametools.subtitle">Sauvegardes, Cartes & Contrôles</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title" data-i18n-key="card.backup">Gestionnaire de Sauvegarde</span></div>
+                <div class="grid-2">
+                    <button class="btn" id="backup"><i class="fa-solid fa-download"></i> <span data-i18n-key="btn.backup">Backup</span></button>
+                    <button class="btn" id="restore"><i class="fa-solid fa-upload"></i> <span data-i18n-key="btn.restore">Restore</span></button>
+                    <button class="btn btn-primary" id="save100"><i class="fa-solid fa-unlock"></i> <span data-i18n-key="btn.unlock">Unlock All</span></button>
+                    <button class="btn btn-danger" id="cleanData"><i class="fa-solid fa-trash"></i> <span data-i18n-key="btn.resetData">Reset Data</span></button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title" data-i18n-key="card.mapSelector">Sélecteur de Carte (Versions Précédentes)</span></div>
+                <div class="scroll-list">
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/index.html">🌉 San Francisco</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/winterholiday.html">❄️ Winter Holiday</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/monaco.html">🏎️ Monaco</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/zurich.html">🏔️ Zurich</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/london.html">💂🏼 London</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/houston.html">🤠 Houston</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/havana.html">🍹 Havana</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/berlin.html">🦅 Berlin</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/beijing.html">🏯 Beijing</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/mexico.html">💀 Mexico</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/iceland.html">🌋 Iceland</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/buenos-aires.html">💃 Buenos Aires</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/barcelona.html">🎨 Barcelona</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/miami.html">🌴 Miami</button>
+                    <button class="btn btn-mini city-link" data-url="https://yell0wsuit.page/assets/games/subway-surfers-unity/neworleans.html">🎺 New Orleans</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title" data-i18n-key="card.keymap">Mapping Clavier (ZQSD)</span></div>
+                <div class="grid-4">
+                    <input type="text" id="upKey" placeholder="Haut (Z)" data-i18n-placeholder="placeholder.up">
+                    <input type="text" id="leftKey" placeholder="Gauche (Q)" data-i18n-placeholder="placeholder.left">
+                    <input type="text" id="downKey" placeholder="Bas (S)" data-i18n-placeholder="placeholder.down">
+                    <input type="text" id="rightKey" placeholder="Droite (D)" data-i18n-placeholder="placeholder.right">
+                </div>
+                <div class="grid-2" style="margin-top: 10px;">
+                    <button class="btn btn-primary" id="saveZqsdKeys" data-i18n-key="btn.apply">Appliquer</button>
+                    <button class="btn" id="deactivateZqsd" data-i18n-key="btn.disable">Désactiver</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title" data-i18n-key="card.worldRecords">World Records</span></div>
+                <button class="btn city-link" data-url="https://www.speedrun.com/subsurf?h=No_Coins-no-hoverboard-no-keys-web&x=n2y350ed-j84eeg2n.21gy6p81-onv47omn.81p9k88q">
+                    🏆 <span data-i18n-key="btn.leaderboard">Voir le Leaderboard Speedrun.com</span>
+                </button>
+            </div>
+
+        </div>
+
+        <div id="appearance" class="view-section">
+            <div class="section-header">
+                <div class="section-title" data-i18n-key="section.appearance.title">Apparence</div>
+                <div class="section-subtitle" data-i18n-key="section.appearance.subtitle">Personnalisez votre interface</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title" data-i18n-key="card.overlay">Overlay Touches</span></div>
+                
+                <div class="hotkey-container" style="margin-bottom: 12px;">
+                    <button class="key-btn key-layout-btn active" data-layout="arrows">Arrows</button>
+                    <button class="key-btn key-layout-btn" data-layout="wasd">WASD</button>
+                    <button class="key-btn key-layout-btn" data-layout="zqsd">ZQSD</button>
+                </div>
+
+                <div class="grid-3">
+                    <button class="btn btn-mini key-theme-btn" data-theme="default">Default</button>
+                    <button class="btn btn-mini key-theme-btn" data-theme="minimal">Minimal</button>
+                    <button class="btn btn-mini key-theme-btn" data-theme="block">Block</button>
+                    <button class="btn btn-mini key-theme-btn" data-theme="classic">Classic</button>
+                    <button class="btn btn-mini key-theme-btn" data-theme="retro">Retro</button>
+                    <button class="btn btn-mini key-theme-btn" data-theme="block-white">White</button>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div class="section-title">Images de Fond</div>
+                <div class="section-subtitle">Une image unique pour chaque outil</div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">Timer Background</span></div>
+                <div class="upload-row">
+                    <div id="preview-timer" class="preview-box"></div>
+                    <button class="btn btn-mini upload-btn" id="btn-upload-timer">Choisir Image</button>
+                    <button class="btn btn-mini btn-danger" id="btn-reset-timer" style="width: 30px;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <input type="file" id="file-timer" accept="image/*" hidden>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">FPS Counter Background</span></div>
+                <div class="upload-row">
+                    <div id="preview-fps" class="preview-box"></div>
+                    <button class="btn btn-mini upload-btn" id="btn-upload-fps">Choisir Image</button>
+                    <button class="btn btn-mini btn-danger" id="btn-reset-fps" style="width: 30px;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <input type="file" id="file-fps" accept="image/*" hidden>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title">Touches (Keys) Background</span></div>
+                <div class="upload-row">
+                    <div id="preview-keys" class="preview-box"></div>
+                    <button class="btn btn-mini upload-btn" id="btn-upload-keys">Image Globale</button>
+                    <button class="btn btn-mini upload-btn" id="btn-upload-keys-active">Image Active</button>
+                    <button class="btn btn-mini btn-danger" id="btn-reset-keys" style="width: 30px;"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <input type="file" id="file-keys" accept="image/*" hidden>
+                <input type="file" id="file-keys-active" accept="image/*" hidden>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title" data-i18n-key="card.timerColors">Couleurs du Timer</span></div>
+                <div class="grid-3">
+                    <div>
+                        <div class="control-desc" data-i18n-key="desc.colorRunning">En cours</div>
+                        <input type="color" id="color-running" class="color-picker" value="#dc2626" style="height: 35px; padding: 0; background:none; border:none; cursor:pointer;">
+                    </div>
+                    <div>
+                        <div class="control-desc" data-i18n-key="desc.colorPaused">Pause</div>
+                        <input type="color" id="color-paused" class="color-picker" value="#dc2626" style="height: 35px; padding: 0; background:none; border:none; cursor:pointer;">
+                    </div>
+                    <div>
+                        <div class="control-desc" data-i18n-key="desc.colorStopped">Arrêt</div>
+                        <input type="color" id="color-stopped" class="color-picker" value="#dc2626" style="height: 35px; padding: 0; background:none; border:none; cursor:pointer;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title" data-i18n-key="language.title">Language</span></div>
+                <div class="control-desc" data-i18n-key="language.subtitle" style="margin-bottom: 12px;">We will use it for the popup UI.</div>
+                <div class="style-language-options language-options">
+                    <button type="button" class="language-option" data-lang="fr">
+                        <span>🇫🇷</span>
+                        <div>
+                            <div data-i18n-key="language.fr">Français</div>
+                            <div class="language-badge" data-i18n-key="language.frLabel">Default</div>
+                        </div>
+                    </button>
+                    <button type="button" class="language-option" data-lang="en">
+                        <span>🇺🇸</span>
+                        <div>
+                            <div data-i18n-key="language.en">English</div>
+                            <div class="language-badge" data-i18n-key="language.enLabel">International</div>
+                        </div>
+                    </button>
+                    <button type="button" class="language-option" data-lang="pt-BR">
+                        <span>🇧🇷</span>
+                        <div>
+                            <div data-i18n-key="language.pt">Português (Brasil)</div>
+                            <div class="language-badge" data-i18n-key="language.ptLabel">BR community</div>
+                        </div>
+                    </button>
+                    <button type="button" class="language-option" data-lang="zh">
+                        <span>🇨🇳</span>
+                        <div>
+                            <div data-i18n-key="language.zh">中文</div>
+                            <div class="language-badge" data-i18n-key="language.zhLabel">Simplified Chinese</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="advanced" class="view-section">
+            <div class="section-header">
+                <div class="section-title" data-i18n-key="section.custom.title">Customisation Totale</div>
+                <div class="section-subtitle" data-i18n-key="section.custom.subtitle">Modifiez les arrondis, couleurs et styles</div>
+            </div>
+
+            <div class="card" data-i18n-tooltip="tooltip.volume">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-volume-high"></i> <span data-i18n-key="custom.volumeGame">Volume du jeu</span></span></div>
+                <div class="control-desc" data-i18n-key="custom.volumeDesc" style="margin-bottom: 10px;">Volume global du jeu (page yell0wsuit). Par défaut 50%.</div>
+                <div class="style-label" style="margin-bottom: 6px;"><span data-i18n-key="custom.volumeLabel">Volume</span> <span id="volumeValue">50%</span></div>
+                <input type="range" class="style-slider" id="volumeSlider" min="0" max="100" value="50">
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-stopwatch"></i> <span data-i18n-key="card.customTimer">Timer</span></span></div>
+                
+                <div class="grid-2">
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.bgColor">Couleur de fond</div>
+                        <input type="color" id="timer-bg-color" value="#000000" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.textColor">Couleur du texte</div>
+                        <input type="color" id="timer-text-color" value="#dc2626" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                </div>
+                
+                <div class="style-label" style="margin-top:10px;"><span data-i18n-key="custom.radius">Arrondi</span> <span id="val-timer-radius">0px</span></div>
+                <input type="range" class="style-slider" id="timer-radius" min="0" max="30" value="0">
+                
+                <div class="style-label"><span data-i18n-key="custom.opacity">Opacité</span> <span id="val-timer-opacity">100%</span></div>
+                <input type="range" class="style-slider" id="timer-opacity" min="0" max="100" value="100">
+                
+                <div class="style-label"><span data-i18n-key="custom.fontSize">Taille police</span> <span id="val-timer-font">100%</span></div>
+                <input type="range" class="style-slider" id="timer-font-scale" min="50" max="200" value="100">
+                
+                <div class="style-label"><span data-i18n-key="custom.borderWidth">Épaisseur bordure</span> <span id="val-timer-border">0px</span></div>
+                <input type="range" class="style-slider" id="timer-border-width" min="0" max="10" value="0">
+                
+                <div class="grid-2" style="margin-top:10px;">
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.borderColor">Couleur bordure</div>
+                        <input type="color" id="timer-border-color" value="#dc2626" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.font">Police</div>
+                        <select id="timer-font-family">
+                            <option value="'Calibri', 'Segoe UI', sans-serif" data-i18n-key="custom.fontStandard">Standard</option>
+                            <option value="'Courier New', monospace" data-i18n-key="custom.fontRetro">Retro / Code</option>
+                            <option value="'Arial Black', sans-serif" data-i18n-key="custom.fontBold">Bold</option>
+                            <option value="'Georgia', serif" data-i18n-key="custom.fontSerif">Serif</option>
+                            <option value="'Impact', sans-serif" data-i18n-key="custom.fontImpact">Impact</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="style-label" style="margin-top:10px;"><span data-i18n-key="custom.shadow">Ombre portée</span> <span id="val-timer-shadow">0px</span></div>
+                <input type="range" class="style-slider" id="timer-shadow" min="0" max="30" value="0">
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-gauge-high"></i> <span data-i18n-key="card.customFps">FPS Counter</span></span></div>
+                
+                <div class="grid-2">
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.bgColor">Couleur de fond</div>
+                        <input type="color" id="fps-bg-color" value="#000000" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.textColor">Couleur du texte</div>
+                        <input type="color" id="fps-text-color" value="#dc2626" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                </div>
+                
+                <div class="style-label" style="margin-top:10px;"><span data-i18n-key="custom.radius">Arrondi</span> <span id="val-fps-radius">4px</span></div>
+                <input type="range" class="style-slider" id="fps-radius" min="0" max="30" value="4">
+                
+                <div class="style-label"><span data-i18n-key="custom.opacity">Opacité</span> <span id="val-fps-opacity">100%</span></div>
+                <input type="range" class="style-slider" id="fps-opacity" min="0" max="100" value="100">
+                
+                <div class="style-label"><span data-i18n-key="custom.fontSize">Taille police</span> <span id="val-fps-font">100%</span></div>
+                <input type="range" class="style-slider" id="fps-font-scale" min="50" max="200" value="100">
+                
+                <div class="style-label"><span data-i18n-key="custom.borderWidth">Épaisseur bordure</span> <span id="val-fps-border">0px</span></div>
+                <input type="range" class="style-slider" id="fps-border-width" min="0" max="10" value="0">
+                
+                <div class="grid-2" style="margin-top:10px;">
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.borderColor">Couleur bordure</div>
+                        <input type="color" id="fps-border-color" value="#dc2626" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.font">Police</div>
+                        <select id="fps-font-family">
+                            <option value="'Segoe UI', sans-serif" data-i18n-key="custom.fontStandard">Standard</option>
+                            <option value="'Courier New', monospace" data-i18n-key="custom.fontRetro">Retro / Code</option>
+                            <option value="'Arial Black', sans-serif" data-i18n-key="custom.fontBold">Bold</option>
+                            <option value="'Georgia', serif" data-i18n-key="custom.fontSerif">Serif</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="style-label" style="margin-top:10px;"><span data-i18n-key="custom.shadow">Ombre portée</span> <span id="val-fps-shadow">0px</span></div>
+                <input type="range" class="style-slider" id="fps-shadow" min="0" max="30" value="0">
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-keyboard"></i> <span data-i18n-key="card.customKeys">Affichage Touches</span></span></div>
+                
+                <div class="grid-2">
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.keysBg">Couleur fond touches</div>
+                        <input type="color" id="keys-bg-color" value="#000000" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.keysText">Couleur texte</div>
+                        <input type="color" id="keys-text-color" value="#dc2626" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                </div>
+                
+                <div class="grid-2" style="margin-top:10px;">
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.keysActive">Couleur touche active</div>
+                        <input type="color" id="keys-active-color" value="#4bc277" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                    <div>
+                        <div class="control-desc" data-i18n-key="custom.keysBorder">Couleur bordure</div>
+                        <input type="color" id="keys-border-color" value="#dc2626" style="width:100%; height:30px; border:none; padding:0;">
+                    </div>
+                </div>
+                
+                <div class="style-label" style="margin-top:10px;"><span data-i18n-key="custom.keysRadius">Arrondi des touches</span> <span id="val-keys-radius">12px</span></div>
+                <input type="range" class="style-slider" id="keys-radius" min="0" max="30" value="12">
+                
+                <div class="style-label"><span data-i18n-key="custom.opacity">Opacité</span> <span id="val-keys-opacity">100%</span></div>
+                <input type="range" class="style-slider" id="keys-opacity" min="0" max="100" value="100">
+                
+                <div class="style-label"><span data-i18n-key="custom.keysSize">Taille des touches</span> <span id="val-keys-size">100%</span></div>
+                <input type="range" class="style-slider" id="keys-size-scale" min="60" max="160" value="100">
+                
+                <div class="style-label"><span data-i18n-key="custom.borderWidth">Épaisseur bordure</span> <span id="val-keys-border">2px</span></div>
+                <input type="range" class="style-slider" id="keys-border-width" min="0" max="10" value="2">
+                
+                <div class="style-label"><span data-i18n-key="custom.shadow">Ombre portée</span> <span id="val-keys-shadow">6px</span></div>
+                <input type="range" class="style-slider" id="keys-shadow" min="0" max="30" value="6">
+                
+                <div class="style-label"><span data-i18n-key="custom.keysGap">Espacement entre touches</span> <span id="val-keys-gap">10px</span></div>
+                <input type="range" class="style-slider" id="keys-gap" min="0" max="30" value="10">
+            </div>
+
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-file-export"></i> <span data-i18n-key="card.exportImport">Export / Import config</span></span></div>
+                <div class="control-desc" data-i18n-key="desc.exportImport" style="margin-bottom: 12px;">Sauvegardez toute votre config (résolution, couleurs, langue, volume…) en un fichier JSON, ou restaurez-la sur un autre PC.</div>
+                <div class="grid-2">
+                    <button type="button" class="btn btn-primary" id="exportConfigBtn"><i class="fa-solid fa-download"></i> <span data-i18n-key="btn.exportConfig">Exporter la config</span></button>
+                    <button type="button" class="btn" id="importConfigBtn"><i class="fa-solid fa-upload"></i> <span data-i18n-key="btn.importConfig">Importer la config</span></button>
+                </div>
+                <input type="file" id="importConfigInput" accept=".json,application/json" hidden>
+            </div>
+
+            <button class="btn btn-danger" id="resetAllCustom" style="width:100%; margin-top:10px;">
+                <i class="fa-solid fa-rotate-left"></i> <span data-i18n-key="btn.resetAllCustom">Réinitialiser toute la customisation</span>
+            </button>
+        </div>
+
+        <div id="dev" class="view-section">
+            <div class="section-header">
+                <div class="section-title">Dev</div>
+                <div class="section-subtitle">Creator & liens</div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title"><i class="fa-solid fa-user-pen"></i> Creator</span></div>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <a href="https://guns.lol/uhquser" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%; text-decoration:none; text-align:center;">
+                        <i class="fa-solid fa-gun"></i> Guns
+                    </a>
+                    <a href="https://github.com/root-0x" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%; text-decoration:none; text-align:center;">
+                        <i class="fa-brands fa-github"></i> GitHub
+                    </a>
+                    <a href="https://www.tiktok.com/@slayy._.random" target="_blank" rel="noopener" class="btn btn-primary" style="width:100%; text-decoration:none; text-align:center;">
+                        <i class="fa-brands fa-tiktok"></i> TikTok
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        </div>
+        <footer class="app-footer">Copyright (c) 2025 - All rights reserved.</footer>
+    </div>
+
+    <div id="status" class="status-toast">
+        <span class="toast-icon success" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
+        <span class="status-message" data-i18n-key="status.done">Action effectuée</span>
+    </div>
+
+    <button id="toggleTimer" style="display:none;"></button>
+    <button id="toggleFps" style="display:none;"></button>
+    <button id="toggleKeypress" style="display:none;"></button>
+
+    <script src="popup.js"></script>
+</body>
+</html>
